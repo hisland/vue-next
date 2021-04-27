@@ -2,6 +2,8 @@ import { reactive, watchEffect } from 'vue'
 import { compileFile, MAIN_FILE } from './sfcCompiler'
 import LZUTF8 from 'lzutf8'
 
+const LZUTF8Encoding = 'Base64'
+
 const welcomeCode = `
 <template>
   <h1>{{ msg }}</h1>
@@ -40,7 +42,7 @@ let files: Store['files'] = {}
 const savedFiles = location.hash.slice(1)
 if (savedFiles) {
   const saved = JSON.parse(
-    LZUTF8.decompress(savedFiles, { inputEncoding: 'Base64' })
+    LZUTF8.decompress(savedFiles, { inputEncoding: LZUTF8Encoding })
   )
   for (const filename in saved) {
     files[filename] = new File(filename, saved[filename])
@@ -78,7 +80,7 @@ watchEffect(() => {
     '',
     '#' +
       LZUTF8.compress(JSON.stringify(exportFiles()), {
-        outputEncoding: 'Base64'
+        outputEncoding: LZUTF8Encoding
       })
   )
 })
